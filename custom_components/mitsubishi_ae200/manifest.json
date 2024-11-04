@@ -1,5 +1,5 @@
 {
-  "domain": "ae200",
+  "domain": "mitsubishi_ae200",
   "name": "Mitsubishi AE200 HVAC",
   "documentation": "https://github.com/natevoci/ha-ae200/",
   "dependencies": [],
