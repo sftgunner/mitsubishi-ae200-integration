@@ -33,7 +33,7 @@ def getMnetDetails(deviceIds):
 </Packet>
 """
 
-class AE200Functions:
+class MitsubishiAE200Functions:
     def __init__(self):
         self._json = None
         self._temp_list = []
@@ -61,9 +61,6 @@ class AE200Functions:
 
             return groupList
 
-    def getDevices(self, address):
-        return asyncio.run(self.getDevicesAsync(address))
-
 
     async def getDeviceInfoAsync(self, address, deviceId):
         async with websockets.connect(
@@ -84,9 +81,6 @@ class AE200Functions:
             await websocket.close()
 
             return node.attrib
-
-    def getDeviceInfo(self, address, deviceId):
-        return asyncio.run(self.getDeviceInfoAsync(address, deviceId))
 
 
     async def sendAsync(self, address, deviceId, attributes):
@@ -109,22 +103,3 @@ class AE200Functions:
             await websocket.send(payload)
 
             await websocket.close()
-
-    def send(self, address, deviceId, attributes):
-        return asyncio.run(self.sendAsync(address, deviceId, attributes))
-
-
-if __name__ == "__main__":
-    d = AE200Functions()
-    address = "192.168.1.10"
-    
-    # Test reading device list
-    # pprint(d.getDevices(address))
-
-    # Test reading info for device 6
-    # pprint(d.getDeviceInfo(address, "6"))
-
-    # Test turning off device 6
-    # d.send(address, "6", {
-    #     "Drive": "OFF"
-    # })

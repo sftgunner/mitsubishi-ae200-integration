@@ -1,9 +1,9 @@
 {
   "domain": "mitsubishi_ae200",
   "name": "Mitsubishi AE200 HVAC",
-  "documentation": "https://github.com/natevoci/ha-ae200/",
+  "documentation": "https://github.com/sftgunner/mitsubishi-ae200-integration",
   "dependencies": [],
-  "codeowners": ["@natevoci"],
-  "version": "1.0.0",
+  "codeowners": ["@natevoci","@sftgunner"],
+  "version": "1.1.0",
   "requirements": ["websockets"]
 }
