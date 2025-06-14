@@ -170,7 +170,12 @@ class AE200Climate(ClimateEntity):
         
         
         self._attr_supported_features = (
-            ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.SWING_MODE | ClimateEntityFeature.TARGET_TEMPERATURE_RANGE
+            ClimateEntityFeature.TARGET_TEMPERATURE | 
+            ClimateEntityFeature.FAN_MODE | 
+            ClimateEntityFeature.SWING_MODE | 
+            ClimateEntityFeature.TARGET_TEMPERATURE_RANGE |
+            ClimateEntityFeature.TURN_ON |
+            ClimateEntityFeature.TURN_OFF
         )
         self._attr_temperature_unit = UnitOfTemperature.CELSIUS
         self._current_temperature = None
@@ -180,6 +185,7 @@ class AE200Climate(ClimateEntity):
         self._swing_mode = None
         self._fan_mode = None
         self._hvac_mode = HVACMode.OFF
+        self._last_hvac_mode = HVACMode.COOL  # Keep track of last HVAC mode to handle turning on/off
 
     @property
     def supported_features(self):
@@ -247,6 +253,19 @@ class AE200Climate(ClimateEntity):
     @property
     def hvac_mode(self):
         return self._hvac_mode
+    
+    async def async_turn_on(self):
+        _LOGGER.info(f"Turning on HVAC mode: {self._last_hvac_mode} for {self.entity_id}")
+        await self._device.powerOn()
+        self._hvac_mode = self._last_hvac_mode # Update the home assistant state to the existing mode
+        # If the last HVAC mode was OFF, we need to set it to the last known mode
+        self.async_write_ha_state()
+        
+    async def async_turn_off(self):
+        _LOGGER.info(f"Turning off HVAC for {self.entity_id}")
+        await self._device.powerOff()
+        self._hvac_mode = HVACMode.OFF
+        self.async_write_ha_state()
     
     async def async_set_swing_mode(self, swing_mode):
         # Convert user-friendly label back to device value
