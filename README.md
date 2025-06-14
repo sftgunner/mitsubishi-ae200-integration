@@ -2,6 +2,8 @@
 
 Add support for Mitsubishi AE-200 air conditioner controller to HomeAssistant
 
+This version forked from @natevoci's original integration (https://github.com/natevoci/ae200), and updated to work with newer HomeAssistant versions
+
 ## Installation
 
 ### Disclaimer
