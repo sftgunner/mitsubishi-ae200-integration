@@ -11,6 +11,7 @@ from homeassistant.const import (
     UnitOfTemperature,
     ATTR_TEMPERATURE,
 )
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity import generate_entity_id, DeviceInfo
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -208,12 +209,13 @@ class AE200Climate(ClimateEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device information about this Mitsubishi AE200 HVAC unit."""
+        hub = dr.async_get(self.hass).async_get_device(identifiers={(DOMAIN, self._entry_id)})
         return DeviceInfo(
             identifiers={(DOMAIN, f"{self._entry_id}_{self._device.getID()}")},
             name=self._device.getName(),
             manufacturer="Mitsubishi Electric",
             model="HVAC Unit",
-            via_device=(DOMAIN, self._entry_id),
+            via_device_id=hub.id if hub else None,
         )
 
     @property
