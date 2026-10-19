@@ -7,6 +7,7 @@ from homeassistant.const import CONF_IP_ADDRESS
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity import DeviceInfo
 
 from .mitsubishi_ae200 import MitsubishiAE200Functions
@@ -43,12 +44,13 @@ class AE200FilterSignSensor(BinarySensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device information about this sensor."""
+        hub = dr.async_get(self.hass).async_get_device(identifiers={(DOMAIN, self._entry_id)})
         return DeviceInfo(
             identifiers={(DOMAIN, f"{self._entry_id}_{self._device.getID()}")},
             name=self._device.getName(),
             manufacturer="Mitsubishi Electric",
             model="HVAC Unit",
-            via_device=(DOMAIN, self._entry_id),
+            via_device_id=hub.id if hub else None,
         )
 
     @property
